@@ -3,8 +3,22 @@ import Post from './Post.js'
 class PostController {
   async create(req, res) {
     try {
-      const { author, title, text } = req.body
-      const post = await Post.create({ author, title, text })
+      const createDate = new Date()
+      const { title, description, body } = req.body
+      const post = await Post.create({
+        title,
+        description,
+        body,
+        createdAt: createDate.toISOString(),
+        updatedAt: false,
+        favoritesCount: 0,
+        author: {
+          username: '',
+          bio: '',
+          image: '',
+          following: true
+        }
+      })
       console.log(req.body)
       return res.json(post)
     } catch (e) {
