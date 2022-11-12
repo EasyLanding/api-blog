@@ -34,5 +34,49 @@ class UserService {
       user: userDto
     }
   }
+  async login(email, password) {
+    const user = await UserSchema.findOne({ email })
+    if (!user) {
+      throw ApiError.BadRequest('Пользователь с таким email не найден')
+    }
+    const isPassEquals = await bcrypt.compare(password, user.password)
+    if (!isPassEquals) {
+      throw ApiError.BadRequest('Не верный пароль')
+    }
+
+    const userDto = new UserDto(user)
+    const tokens = tokenService.generateToken({ ...userDto })
+    await tokenService.saveToken(userDto.id, tokens.refreshToken)
+    return {
+      ...tokens,
+      user: userDto
+    }
+  }
+  async logout(refreshToken) {
+    const token = await tokenService.removeToken(refreshToken)
+    return token
+  }
+  async refresh(refreshToken) {
+    if (!refreshToken) {
+      throw ApiError.UnauthorizationError()
+    }
+    const userData = tokenService.validateRefreshToken(refreshToken)
+    const findTokenDB = await tokenService.findToken(refreshToken)
+    if (!userData || !findTokenDB) {
+      throw ApiError.UnauthorizationError()
+    }
+    const user = await UserSchema.findById(userData.id)
+    const userDto = new UserDto(user)
+    const tokens = tokenService.generateToken({ ...userDto })
+    await tokenService.saveToken(userDto.id, tokens.refreshToken)
+    return {
+      ...tokens,
+      user: userDto
+    }
+  }
+  async getAllUsers() {
+    const users = await UserSchema.find()
+    return users
+  }
 }
 export default new UserService()
