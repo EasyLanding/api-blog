@@ -5,10 +5,7 @@ class MailService {
       host: 'smtp.yandex.ru',
       port: 465,
       secure: true, // true for 465, false for other ports
-      auth: {
-        user: 'testapi.api@yandex.ru', // generated ethereal user
-        pass: '59286877TestApi' // generated ethereal password
-      }
+      auth: {}
     })
   }
 
