@@ -4,6 +4,7 @@ import router from './router/router.js'
 import cors from 'cors'
 import * as dotenv from 'dotenv'
 import cookieParser from 'cookie-parser'
+import Middleware from './middleware/Middleware.js'
 
 dotenv.config()
 const PORT = process.env.PORT || 5000
@@ -12,6 +13,7 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(cors())
 app.use('/api', router)
+app.use(Middleware)
 
 async function appStart() {
   try {
