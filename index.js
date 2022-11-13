@@ -243,7 +243,7 @@ const swagger = {
 
 dotenv.config()
 const PORT = process.env.PORT || 5000
-const app = express()
+export const app = express()
 
 const customCss = fs.readFileSync(process.cwd() + '/swagger.css', 'utf8')
 
