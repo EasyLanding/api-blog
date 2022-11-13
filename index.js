@@ -254,7 +254,7 @@ app.use(cors())
 app.use('/api', router)
 app.use(Middleware)
 
-async function appStart() {
+export async function appStart() {
   try {
     await mongoose.connect(process.env.DB_URL)
     app.listen(PORT, () => console.log(`serverStarted on PORT: ${PORT}`))
