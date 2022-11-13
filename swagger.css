@@ -7,11 +7,11 @@ body {
 }
 
 .swagger-ui .info .base-url {
-  font-size: 25px;
+  font-size: 18px;
 }
 
 .swagger-ui .markdown p {
-  font-size: 40px;
+  font-size: 20px;
 }
 
 .swagger-ui .btn.execute {
