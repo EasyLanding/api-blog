@@ -78,5 +78,11 @@ class UserService {
     const users = await UserSchema.find()
     return users
   }
+  async updateUsers(id, user) {
+    const newUser = await UserSchema.findByIdAndUpdate(id, user, {
+      new: true
+    })
+    return newUser
+  }
 }
 export default new UserService()

@@ -80,6 +80,15 @@ class UserController {
   }
   async updateUser(req, res, next) {
     try {
+      const user = req.body
+      const { id } = req.params
+      if (!id) {
+        res
+          .status(400)
+          .json({ message: 'ID User Не указан или указан не верно' })
+      }
+      const updateUser = await userService.updateUsers(id, user)
+      return res.json(updateUser)
     } catch (e) {
       next(e)
     }
