@@ -74,6 +74,33 @@ const swagger = {
         }
       }
     },
+    '/users/logout': {
+      'post': {
+        'summary': 'Existing user logout',
+        'description': 'Logout for existing user',
+        'tags': ['User and Authentication'],
+        'operationId': 'Logout',
+        'parameters': [],
+        'responses': {
+          '200': {
+            'description': 'OK',
+            'schema': {
+              'type': 'object',
+              'properties': {
+                'acknowledged': { 'type': 'boolean' },
+                'deletedCount': { 'type': 'number' }
+              }
+            }
+          },
+          '422': {
+            'description': 'Unexpected error',
+            'schema': {
+              '$ref': '#/definitions/GenericErrorModel'
+            }
+          }
+        }
+      }
+    },
     '/users': {
       'post': {
         'summary': 'Register a new user',
@@ -163,166 +190,6 @@ const swagger = {
             'description': 'OK',
             'schema': {
               '$ref': '#/definitions/UserResponse'
-            }
-          },
-          '401': {
-            'description': 'Unauthorized'
-          },
-          '422': {
-            'description': 'Unexpected error',
-            'schema': {
-              '$ref': '#/definitions/GenericErrorModel'
-            }
-          }
-        }
-      }
-    },
-    '/profiles/{username}': {
-      'get': {
-        'summary': 'Get a profile',
-        'description':
-          'Get a profile of a user of the system. Auth is optional',
-        'tags': ['Profile'],
-        'operationId': 'GetProfileByUsername',
-        'parameters': [
-          {
-            'name': 'username',
-            'in': 'path',
-            'description': 'Username of the profile to get',
-            'required': true,
-            'type': 'string'
-          }
-        ],
-        'responses': {
-          '200': {
-            'description': 'OK',
-            'schema': {
-              '$ref': '#/definitions/ProfileResponse'
-            }
-          },
-          '401': {
-            'description': 'Unauthorized'
-          },
-          '422': {
-            'description': 'Unexpected error',
-            'schema': {
-              '$ref': '#/definitions/GenericErrorModel'
-            }
-          }
-        }
-      }
-    },
-    '/profiles/{username}/follow': {
-      'post': {
-        'summary': 'Follow a user',
-        'description': 'Follow a user by username',
-        'tags': ['Profile'],
-        'security': [
-          {
-            'Token': []
-          }
-        ],
-        'operationId': 'FollowUserByUsername',
-        'parameters': [
-          {
-            'name': 'username',
-            'in': 'path',
-            'description': 'Username of the profile you want to follow',
-            'required': true,
-            'type': 'string'
-          }
-        ],
-        'responses': {
-          '200': {
-            'description': 'OK',
-            'schema': {
-              '$ref': '#/definitions/ProfileResponse'
-            }
-          },
-          '401': {
-            'description': 'Unauthorized'
-          },
-          '422': {
-            'description': 'Unexpected error',
-            'schema': {
-              '$ref': '#/definitions/GenericErrorModel'
-            }
-          }
-        }
-      },
-      'delete': {
-        'summary': 'Unfollow a user',
-        'description': 'Unfollow a user by username',
-        'tags': ['Profile'],
-        'security': [
-          {
-            'Token': []
-          }
-        ],
-        'operationId': 'UnfollowUserByUsername',
-        'parameters': [
-          {
-            'name': 'username',
-            'in': 'path',
-            'description': 'Username of the profile you want to unfollow',
-            'required': true,
-            'type': 'string'
-          }
-        ],
-        'responses': {
-          '200': {
-            'description': 'OK',
-            'schema': {
-              '$ref': '#/definitions/ProfileResponse'
-            }
-          },
-          '401': {
-            'description': 'Unauthorized'
-          },
-          '422': {
-            'description': 'Unexpected error',
-            'schema': {
-              '$ref': '#/definitions/GenericErrorModel'
-            }
-          }
-        }
-      }
-    },
-    '/articles/feed': {
-      'get': {
-        'summary': 'Get recent articles from users you follow',
-        'description':
-          'Get most recent articles from users you follow. Use query parameters to limit. Auth is required',
-        'tags': ['Articles'],
-        'security': [
-          {
-            'Token': []
-          }
-        ],
-        'operationId': 'GetArticlesFeed',
-        'parameters': [
-          {
-            'name': 'limit',
-            'in': 'query',
-            'description': 'Limit number of articles returned (default is 20)',
-            'required': false,
-            'default': 20,
-            'type': 'integer'
-          },
-          {
-            'name': 'offset',
-            'in': 'query',
-            'description': 'Offset/skip number of articles (default is 0)',
-            'required': false,
-            'default': 0,
-            'type': 'integer'
-          }
-        ],
-        'responses': {
-          '200': {
-            'description': 'OK',
-            'schema': {
-              '$ref': '#/definitions/MultipleArticlesResponse'
             }
           },
           '401': {
@@ -552,132 +419,6 @@ const swagger = {
         }
       }
     },
-    '/articles/{slug}/comments': {
-      'get': {
-        'summary': 'Get comments for an article',
-        'description': 'Get the comments for an article. Auth is optional',
-        'tags': ['Comments'],
-        'operationId': 'GetArticleComments',
-        'parameters': [
-          {
-            'name': 'slug',
-            'in': 'path',
-            'required': true,
-            'description':
-              'Slug of the article that you want to get comments for',
-            'type': 'string'
-          }
-        ],
-        'responses': {
-          '200': {
-            'description': 'OK',
-            'schema': {
-              '$ref': '#/definitions/MultipleCommentsResponse'
-            }
-          },
-          '401': {
-            'description': 'Unauthorized'
-          },
-          '422': {
-            'description': 'Unexpected error',
-            'schema': {
-              '$ref': '#/definitions/GenericErrorModel'
-            }
-          }
-        }
-      },
-      'post': {
-        'summary': 'Create a comment for an article',
-        'description': 'Create a comment for an article. Auth is required',
-        'tags': ['Comments'],
-        'security': [
-          {
-            'Token': []
-          }
-        ],
-        'operationId': 'CreateArticleComment',
-        'parameters': [
-          {
-            'name': 'slug',
-            'in': 'path',
-            'required': true,
-            'description':
-              'Slug of the article that you want to create a comment for',
-            'type': 'string'
-          },
-          {
-            'name': 'comment',
-            'in': 'body',
-            'required': true,
-            'description': 'Comment you want to create',
-            'schema': {
-              '$ref': '#/definitions/NewCommentRequest'
-            }
-          }
-        ],
-        'responses': {
-          '200': {
-            'description': 'OK',
-            'schema': {
-              '$ref': '#/definitions/SingleCommentResponse'
-            }
-          },
-          '401': {
-            'description': 'Unauthorized'
-          },
-          '422': {
-            'description': 'Unexpected error',
-            'schema': {
-              '$ref': '#/definitions/GenericErrorModel'
-            }
-          }
-        }
-      }
-    },
-    '/articles/{slug}/comments/{id}': {
-      'delete': {
-        'summary': 'Delete a comment for an article',
-        'description': 'Delete a comment for an article. Auth is required',
-        'tags': ['Comments'],
-        'security': [
-          {
-            'Token': []
-          }
-        ],
-        'operationId': 'DeleteArticleComment',
-        'parameters': [
-          {
-            'name': 'slug',
-            'in': 'path',
-            'required': true,
-            'description':
-              'Slug of the article that you want to delete a comment for',
-            'type': 'string'
-          },
-          {
-            'name': 'id',
-            'in': 'path',
-            'required': true,
-            'description': 'ID of the comment you want to delete',
-            'type': 'integer'
-          }
-        ],
-        'responses': {
-          '200': {
-            'description': 'OK'
-          },
-          '401': {
-            'description': 'Unauthorized'
-          },
-          '422': {
-            'description': 'Unexpected error',
-            'schema': {
-              '$ref': '#/definitions/GenericErrorModel'
-            }
-          }
-        }
-      }
-    },
     '/articles/{slug}/favorite': {
       'post': {
         'summary': 'Favorite an article',
@@ -817,8 +558,15 @@ const swagger = {
     'NewUserRequest': {
       'type': 'object',
       'properties': {
-        'user': {
-          '$ref': '#/definitions/NewUser'
+        'username': {
+          'type': 'string'
+        },
+        'email': {
+          'type': 'string'
+        },
+        'password': {
+          'type': 'string',
+          'format': 'password'
         }
       },
       'required': ['user']

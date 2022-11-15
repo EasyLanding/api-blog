@@ -4,19 +4,21 @@ class PostController {
   async create(req, res) {
     try {
       const createDate = new Date()
-      const { title, description, body } = req.body
+      const { title, description, body } = req.body.articles
       const post = await Post.create({
-        title,
-        description,
-        body,
-        createdAt: createDate.toISOString(),
-        updatedAt: false,
-        favoritesCount: 0,
-        author: {
-          username: '',
-          bio: '',
-          image: '',
-          following: true
+        articles: {
+          title,
+          description,
+          body,
+          createdAt: createDate.toISOString(),
+          updatedAt: createDate.toISOString(),
+          favoritesCount: 0,
+          author: {
+            username: '',
+            bio: '',
+            image: '',
+            following: true
+          }
         }
       })
       console.log(req.body)
